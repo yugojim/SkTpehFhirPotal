@@ -393,8 +393,10 @@ def DischargeSummaryCRUD(request):
     if method=='GET':
         if resourceTypeid!='':
             DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'_id='+resourceTypeid+'&'
-        DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'title=出院&_sort=-_lastUpdated&_count=100'
-        #print(DiagnosticReportNursingjsonurl)
+        Patientname=request.POST['name']
+        if Patientname!='':        
+            DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'subject:Patient.name='+Patientname+'&'
+        DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'title=出院&_count=200'
         response = requests.request(method, DiagnosticReportNursingjsonurl, headers=headers, data=payload, verify=False)
         resultjson=json.loads(response.text)
         #print(resultjson)
@@ -434,12 +436,19 @@ def VisitNoteCRUD(request):
         DiagnosticReportNursingjsonurl = fhir +'Composition?'
     method=request.POST['method']
     resourceTypeid=request.POST['id']
+    #print(resourceTypeid)
     if resourceTypeid!='':        
         DiagnosticReportNursingjson['id']=resourceTypeid
+        
+    #?subject:Patient.name=Sarah
     if method=='GET':
         if resourceTypeid!='':
             DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'_id='+resourceTypeid+'&'
-        DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'?title=門診&_sort=-_lastUpdated&_count=100'
+        Patientname=request.POST['name']
+        if Patientname!='':        
+            DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'subject:Patient.name='+Patientname+'&'
+        DiagnosticReportNursingjsonurl=DiagnosticReportNursingjsonurl+'title=門診&_count=200'
+        #print(DiagnosticReportNursingjsonurl)
         response = requests.request(method, DiagnosticReportNursingjsonurl, headers=headers, data=payload, verify=False)
         resultjson=json.loads(response.text)
         return ('查詢完畢',resultjson)
